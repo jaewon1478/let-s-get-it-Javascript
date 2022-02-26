@@ -7,6 +7,56 @@
   <title>쿵쿵따</title>
 </head>
 <body>
-  
+  <div><span id="order">1</span>번째 참가자</div>
+  <div>제시어: <span id="word"></span></div>
+  <input type="text">
+  <button>입력</button>
+  <script>
+    let word; //제시어
+    let newWord; //새로 입력할 단어
+
+    const number = parseInt(prompt('쿵쿵따 게임에 오신 것을 환영합니다. 몇명이 참가하시겠습니까?'));
+    confirm(number + '명이 맞습니까?');
+
+    const $order = document.querySelector('#order');
+    const $word = document.querySelector('#word');
+    const $input = document.querySelector('input');
+    const $button = document.querySelector('button');
+      
+
+    const onInput = (event) => {
+      newWord = event.target.value;
+    };
+
+    const onClickButton = () => {
+      //제시어가 비어있는가?
+      if(!word || word[word.length - 1] === newWord[0]) {
+          word = newWord;
+          $word.textContent = word;
+          $input.value = '';
+          $input.focus();
+
+          const order = Number($order.textContent);
+
+          if(order + 1 > number) {
+            $order.textContent = 1;
+          } else {
+            $order.textContent = order + 1;
+          }
+        } else {
+          //올바르지 않다.
+          alert('제시어가 올바르지 않습니다!');
+        }
+    };
+
+
+
+
+    $input.addEventListener('input', onInput);
+    $button.addEventListener('click', onClickButton);
+
+
+
+  </script>
 </body>
 </html>
