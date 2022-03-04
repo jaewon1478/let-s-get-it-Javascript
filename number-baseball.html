@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>숫자야구</title>
+</head>
+<body>
+  <form id="form">
+    <input type="text" id="input">
+    <button>확인</button>
+    <div id="logs"></div>
+  </form>
+
+  <script>
+    const $input = document.querySelector('#input');
+    const $form = document.querySelector('#form');
+    const logs = document.querySelector('#logs');
+
+    const numbers = [];
+    for(let n=0; n<9; n++) {
+      numbers.push(n+1);
+    }
+
+    const answer = [];
+    for(let n=0; n<4; n++) {
+      const index = Math.floor(Math.random() * numbers.length); //0~8 정수 for index
+      answer.push(numbers[index]);
+      numbers.splice(index, 1);
+    }
+
+    const tries = [];
+    function checkInput(input) {
+      if(input.length !== 4) { //4자리 숫자를 입력했는지 확인
+        return alert('4자리 숫자를 입력해 주세요.');
+      }
+      if(new Set(input).size !== 4) { //4자리 안에 중복된 숫자를 입력했는지 확인
+        return alert('중복되지 않게 입력해 주세요');
+      }
+      if(tries.includes(input)) { // 이전에 같은 숫자를 입력했는지 확인
+        return alert('이미 시도한 값입니다.');
+      }
+      return true;
+    }
+
+    $form.addEventListener('sumit',(event) => {
+      event.preventDefault(); //form 기본 동작 막기
+      const value = $input.value;
+      $input.value = '';
+      if(!checkInput(value)) {
+        return;
+      }
+      //입력값 문제없음
+      if(answer.join('') === value) {
+        $logs.textContent = '홈런!';
+        return;
+      }
+      if(tries.length >= 9) {
+        const message = document.createTextNode(`패배! 정답은 ${answer.join('')}입니다.`);
+        $logs.appendChild(message);
+        return;
+      }
+
+    });
+  </script>
+  
+</body>
+</html>
