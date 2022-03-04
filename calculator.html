@@ -45,6 +45,7 @@
 	<script>
 		let numOne = '';
 		let operator = '';
+    let opTwo ='';
 		let numTwo = '';
     const $operator = document.querySelector('#operator');
     const $result = document.querySelector('#result');
@@ -54,6 +55,9 @@
       if(!operator) { 
         numOne += event.target.textContent;
         $result.value += event.target.textContent;
+        if(opTwo) {
+          numOne = opTwo + event.target.textContent;
+        }
         return;
       }
       //비어있지 않다.
@@ -92,8 +96,8 @@
         if(numOne) {
           operator = op;
           $operator.value = op;
-        } else if(op === '-') {
-          $result.value = '-';
+        } else if(!numOne && op === '-') {
+          opTwo = '-';
 
         } else {
           alert('숫자를 먼저 입력하세요!');
