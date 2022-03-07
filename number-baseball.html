@@ -16,7 +16,7 @@
   <script>
     const $input = document.querySelector('#input');
     const $form = document.querySelector('#form');
-    const logs = document.querySelector('#logs');
+    const $logs = document.querySelector('#logs');
 
     const numbers = [];
     for(let n=0; n<9; n++) {
@@ -29,6 +29,7 @@
       answer.push(numbers[index]);
       numbers.splice(index, 1);
     }
+    console.log(answer);
 
     const tries = [];
     function checkInput(input) {
@@ -44,7 +45,15 @@
       return true;
     }
 
-    $form.addEventListener('sumit',(event) => {
+    function defected() {
+      const message = document.createTextNode(`패배! 정답은 ${answer.join('')}입니다.`);
+      $logs.appendChild(message);
+    }
+
+    let strike = 0;
+    let ball = 0;
+    let out = 0;
+    $form.addEventListener('submit', (event) => {
       event.preventDefault(); //form 기본 동작 막기
       const value = $input.value;
       $input.value = '';
@@ -57,18 +66,14 @@
         return;
       }
       if(tries.length >= 9) {
-        const message = document.createTextNode(`패배! 정답은 ${answer.join('')}입니다.`);
-        $logs.appendChild(message);
+        defected();
         return;
       }
 
       //몇볼 몇 스트라이크인지 확인하기
-      let strike = 0;
-      let ball = 0;
-      let out = 0;
       //answer: 3146, value: 1234
-      for(let i=0; i<answer.length; i++) {
-        const index = value.indexOf(answer[i]);
+      answer.forEach((element, i) => {
+        const index = value.indexOf(element);
         if(index > -1) { //일치하는 숫자 발견
           if(index === i) { //숫자 + 위치가 같은경우
             strike += 1;
@@ -76,8 +81,20 @@
             ball +=1;
           }
         }
+      })
+      
+      if(strike === 0 && ball === 0) {
+        out = out + 1;
+        $logs.append(`${value}: ${out}아웃`, document.createElement('br'));
+      } else {
+        $logs.append(`${value}: ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
       }
-      $logs.append(`${value}: ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+      console.log(out);
+
+      if(out === 3) {
+        defected();
+        return;
+      }
       tries.push(value);
 
     });

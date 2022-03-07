@@ -55,7 +55,7 @@
       if(!operator) { 
         numOne += event.target.textContent;
         $result.value += event.target.textContent;
-        if(opTwo) {
+        if(opTwo === '-') {
           numOne = opTwo + event.target.textContent;
         }
         return;
@@ -128,6 +128,7 @@
       numOne = '';
       numTwo = '';
       operator = '';
+      opTwo = '';
       $operator.value = '';
       $result.value = '';
     });
