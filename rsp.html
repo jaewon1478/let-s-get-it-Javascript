@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>가위바위보</title>
+  <style>
+    #computer {
+      width: 142px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div id="computer"></div>
+  <div>
+    <button id="scissors" class="btn">가위</button>
+    <button id="rock" class="btn">바위</button>
+    <button id="paper" class="btn">보</button>
+  </div>
+  <div id="score">0</div>
+  <script>
+    const $computer = document.querySelector('#computer')
+    const $score = document.querySelector('#score')
+    const $scissors = document.querySelector('#scissors')
+    const $rock = document.querySelector('#rock')
+    const $paper = document.querySelector('#paper')
+
+    const IMG_URL = './rsp.png';
+    $computer.style.background = `url(${IMG_URL}) 0 0`;
+    $computer.style.backgroundSize = `auto 200px`;
+
+    const rspX = {
+      scissors: '0', //가위
+      rock: '-228px', //바위
+      paper: '-440px', //보
+    };
+    let computerChoice = 'scissors';
+    const changeComputerHand = () => {
+      if(computerChoice === 'scissors') {
+        computerChoice = 'rock';
+      } else if(computerChoice === 'rock') {
+        computerChoice = 'paper';
+      } else if(computerChoice === 'paper') {
+        computerChoice = 'scissors';
+      }
+
+      
+
+      $computer.style.background = `url(${IMG_URL}) ${rspX[computerChoice]} 0`;
+      $computer.style.backgroundSize = `auto 200px`;
+    }
+
+    let intervalId = setInterval(changeComputerHand, 50);
+    //setTimeout 5번 연속 호출 시, 인터벌이 덮어 씌어짐
+    //그래서 clickButton 실행 시, 5번 째 인터벌만 제거가 되고, 1~4번은 계속해서 반복되기 때문에, 대기 시간이 줄어드는 현상 발생
+    //플래그 변수를 통해 문제 해결
+    let clickable = true;
+    let score = 0;
+    const clickButton = (myChoice) => {
+      if(clickable) {
+        clearInterval(intervalId);
+        clickable = false;
+        //점수 확인 및 출력
+        const myChoice = event.target.textContent === '바위'
+        ? 'rock'
+        :event.target.textContent === '가위'
+        ? 'scissors'
+        : 'paper';
+
+        const scoreTable = {
+          rock: 0,
+          scissors: 1,
+          paper: -1,
+        };
+
+        const myScore = scoreTable[myChoice];
+        const computerScore = scoreTable[computerChoice];
+        const diff = myScore - computerScore;
+        console.log(diff);
+
+        //diff === '고양이' || diff === '사자' || diff === '강아지' || diff === '거북이' ||
+        //배열화 시키면 반복을 줄일 수 있다
+        //['고양이', '사자', '강아지', '거북이'].includes(diff); 
+
+
+        // 가위: 1, 바위: 0, 보: -1
+        // 나\컴퓨터  가위   바위    보
+        //   가위     0      1      2
+        //   바위     -1     0      1
+        //   보      -2     -1     0
+
+        let message;
+        let me = 0;
+        let computer = 0;
+        //2.-1은 승리조건이고, -2,1은 패배조건 (점수표 참고)
+        if([2,-1].includes(diff)) {
+          me += 1;
+          message = '승리';
+        } else if([-2,1].includes(diff)) {
+          computer += 1;
+          message = '패배';
+        } else if([0].includes(diff)) {
+          message = '무승부';
+        }
+        if(me >= 3) {
+          $score.textContent = `나의 승리! ${me} : ${computer}`;
+        } else if(computer >= 3) {
+          $score.textContent = `컴퓨터의 승리! ${me} : ${computer} `;
+        } else {
+          $score.textContent = `${messge}, ${me} : ${computer}`;
+          setTimeout(() => {
+            clickable = true;
+            intervalId = setInterval(changeComputerHand, 50);
+          }, 1000);
+        }
+        
+      }
+    }
+
+    $rock.addEventListener('click', clickButton);
+    $scissors.addEventListener('click', clickButton);
+    $paper.addEventListener('click', clickButton);
+
+    
+
+  </script>
+
+</body>
+</html>
