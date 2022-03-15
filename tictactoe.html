@@ -45,16 +45,28 @@
       data.push([]);
     }
 
+    const checkWinner = (target) => {
+      let rowIndex;
+      let cellIndex;
+    }
+
     const callBack = (event) => {
       //칸에 글자가 존재하는가?
-      if(event.target.textContent) return;
+      if(event.target.textContent !== '') {
+        console.log('빈칸이 아닙니다');
+        return;
+      } 
+      //빈칸이면
+      console.log('빈칸입니다');
       event.target.textContent = turn;
+
       //승부 확인
       if(turn === 'O') {
         turn = 'X';
       } else if(turn === 'X') {
         turn = 'O';
       }
+      
     }
     $table = document.createElement('table');
     $result = document.createElement('div');
